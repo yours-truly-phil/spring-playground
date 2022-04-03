@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.util.List;
+
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -26,7 +28,9 @@ public class AuditingPlaygroundApplication {
             repository.save(new Person("Alice"));
             repository.save(new Person("Bob"));
 
-            repository.findAll().forEach(System.out::println);
+            repository.saveAll(repository.findAll().stream()
+                    .peek(person -> person.setName(person.getName() + " (modified)")).toList()
+            ).forEach(System.out::println);
         };
     }
 
